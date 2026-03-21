@@ -162,7 +162,7 @@ async function connectWhatsApp() {
     version,
     logger,
     printQRInTerminal: false,
-    browser: ["claude-code", "whatsapp", "1.0.0"],
+    browser: ["nexus", "cli", "1.0.0"],
     syncFullHistory: false,
     markOnlineOnConnect: false,
   });
@@ -229,6 +229,11 @@ async function connectWhatsApp() {
 
       // Access control
       if (!isAllowed(jid, participant || undefined)) continue;
+
+      // Mark as read (clears notification on phone)
+      try {
+        await sock.readMessages([msg.key]);
+      } catch {}
 
       storeRaw(msg);
       await handleInbound(msg, jid, participant || undefined);
